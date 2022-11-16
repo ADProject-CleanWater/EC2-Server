@@ -36,6 +36,28 @@ const BME_Schema = (collection) => {
     return BME;
 };
 
+const createBME = (BME, envData) => {
+    return new Promise((resolve, reject) => {
+        BME.create(envData, (err, post) => {
+            if (err) {
+                reject("MongoDB create error");
+            } else {
+                resolve("created!");
+            }
+        });
+    });
+};
+
+const showBME = (BME) => {
+    BME.find({})
+        .sort("createdAt")
+        .exec((err, datas) => {
+            for (data of datas) {
+                console.log(data);
+            }
+        });
+};
+
 const PMS_Schema = (collection) => {
     let model = mongoose.Schema({
         pm1: { type: Number, require: true },
@@ -47,11 +69,9 @@ const PMS_Schema = (collection) => {
     return PMS;
 };
 
-const createPMS = (PMS, pm1, pm25, pm10) => {
+const createPMS = (PMS, pm) => {
     return new Promise((resolve, reject) => {
-        let data = { pm1: pm1, pm25: pm25, pm10: pm10 };
-        console.log(data);
-        PMS.create(data, (err, post) => {
+        PMS.create(pm, (err, post) => {
             if (err) {
                 reject("MongoDB create error");
             } else {
@@ -63,7 +83,7 @@ const createPMS = (PMS, pm1, pm25, pm10) => {
 
 const showPMS = (PMS) => {
     PMS.find({})
-        .sort("-createdAt")
+        .sort("createdAt")
         .exec((err, datas) => {
             for (data of datas) {
                 console.log(data);
@@ -73,6 +93,7 @@ const showPMS = (PMS) => {
 
 //------------------------------------------ Main ------------------------------------------
 var PMS = PMS_Schema("PMS");
+var BME = PMS_Schema("BME");
 
 mqtt.init(mosquitto);
 const client = mqtt.connect(MQTT_SERVER);
@@ -83,9 +104,9 @@ client.on("message", async (topic, message, packet) => {
     console.log("[message] : " + message);
 
     if (topic == "PMS7003M") {
-        PMS_data = JSON.parse(message);
+        let PMS_data = JSON.parse(message);
         console.log(PMS_data);
-        await createPMS(PMS, PMS_data.pm1, PMS_data.pm25, PMS_data.pm10)
+        await createPMS(PMS, PMS_data)
             .then((result) => {
                 console.log(result);
             })
@@ -94,6 +115,20 @@ client.on("message", async (topic, message, packet) => {
             });
         showPMS(PMS);
     }
+
+    if (topic == "BME280") {
+        let BME_data = JSON.parse(message);
+        console.log(BME_data);
+        await createPMS(BME, BME_data)
+            .then((result) => {
+                console.log(result);
+            })
+            .catch((result) => {
+                console.log(result);
+            });
+        showPMS(BME);
+    }
 });
 
 // mosquitto_pub -h 3.34.50.139 -t PMS7003M -m "{\"pm1\": \"1\", \"pm25\": \"25\", \"pm10\": \"10\"}"
+// mosquitto_pub -h 3.34.50.139 -t BME280 -m "{\"temp\": \"26\", \"humi\": \"60\", \"alti\": \"10000\", \"press\": \"10\"}"
