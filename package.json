@@ -1,0 +1,26 @@
+{
+  "name": "ec2-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mqtt_lib.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ADProject-CleanWater/EC2-Server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ADProject-CleanWater/EC2-Server/issues"
+  },
+  "homepage": "https://github.com/ADProject-CleanWater/EC2-Server#readme",
+  "dependencies": {
+    "docdash": "^2.0.0",
+    "dotenv": "^16.0.3",
+    "mongoose": "^6.7.2",
+    "mqtt": "^4.3.7"
+  }
+}
