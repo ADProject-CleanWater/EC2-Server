@@ -28,8 +28,8 @@ const BME_Schema = (collection) => {
     let model = mongoose.Schema({
         temp: { type: Number, require: true },
         humi: { type: Number, require: true },
-        alti: { type: Number, require: true },
-        press: { type: Number, require: true },
+        alti: { type: Number, require: false },
+        press: { type: Number, require: false },
         createdAt: { type: Date, default: Date.now },
     });
     var BME = mongoose.model(collection, model);
@@ -60,7 +60,7 @@ const showBME = (BME) => {
 
 const PMS_Schema = (collection) => {
     let model = mongoose.Schema({
-        pm1: { type: Number, require: true },
+        pm1: { type: Number, require: false },
         pm25: { type: Number, require: true },
         pm10: { type: Number, require: true },
         createdAt: { type: Date, default: Date.now },
@@ -93,7 +93,7 @@ const showPMS = (PMS) => {
 
 //------------------------------------------ Main ------------------------------------------
 var PMS = PMS_Schema("PMS");
-var BME = PMS_Schema("BME");
+var BME = BME_Schema("BME");
 
 mqtt.init(mosquitto);
 const client = mqtt.connect(MQTT_SERVER);
@@ -119,7 +119,7 @@ client.on("message", async (topic, message, packet) => {
     if (topic == "BME280") {
         let BME_data = JSON.parse(message);
         console.log(BME_data);
-        await createPMS(BME, BME_data)
+        await createBME(BME, BME_data)
             .then((result) => {
                 console.log(result);
             })
