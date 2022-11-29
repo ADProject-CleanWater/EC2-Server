@@ -103,7 +103,7 @@ client.on("message", async (topic, message, packet) => {
     console.log("[topic] : ", topic);
     console.log("[message] : " + message);
 
-    if (topic == "PMS7003M") {
+    if (topic == "sensor/pms") {
         let PMS_data = JSON.parse(message);
         console.log(PMS_data);
         await createPMS(PMS, PMS_data)
@@ -116,7 +116,7 @@ client.on("message", async (topic, message, packet) => {
         showPMS(PMS);
     }
 
-    if (topic == "BME280") {
+    if (topic == "sensor/bme") {
         let BME_data = JSON.parse(message);
         console.log(BME_data);
         await createBME(BME, BME_data)
