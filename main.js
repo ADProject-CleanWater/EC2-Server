@@ -5,8 +5,8 @@ const mqtt = require("./mqtt_lib");
 
 //---------- dotenv ----------
 require("dotenv").config();
-const MQTT_SERVER = process.env.MQTT_SERVER;
-const MONGODB_SERVER = process.env.MONGODB_SERVER;
+const MQTT_SERVER = process.env.MQTT;
+const MONGODB_SERVER = process.env.MongoURI;
 //---------- dotenv ----------
 
 //---------- Mongoose ----------
