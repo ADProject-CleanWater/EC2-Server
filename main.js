@@ -51,6 +51,7 @@ const createBME = (BME, envData) => {
 const showBME = (BME) => {
     BME.find({})
         .sort("createdAt")
+	.limit(3)
         .exec((err, datas) => {
             for (data of datas) {
                 console.log(data);
@@ -84,6 +85,7 @@ const createPMS = (PMS, pm) => {
 const showPMS = (PMS) => {
     PMS.find({})
         .sort("createdAt")
+	.limit(3)
         .exec((err, datas) => {
             for (data of datas) {
                 console.log(data);
@@ -97,7 +99,7 @@ var BME = BME_Schema("BME");
 
 mqtt.init(mosquitto);
 const client = mqtt.connect(MQTT_SERVER);
-mqtt.subscribe(["BME280", "PMS7003M"]);
+mqtt.subscribe(["sensor/bme", "sensor/pms"]);
 
 client.on("message", async (topic, message, packet) => {
     console.log("[topic] : ", topic);
