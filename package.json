@@ -20,6 +20,7 @@
   "dependencies": {
     "docdash": "^2.0.0",
     "dotenv": "^16.0.3",
+    "moment": "^2.29.4",
     "mongoose": "^6.7.2",
     "mqtt": "^4.3.7"
   }

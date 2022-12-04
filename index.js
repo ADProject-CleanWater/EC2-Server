@@ -22,6 +22,10 @@ db.on("error", function (err) {
 });
 //---------- Mongoose ----------
 
+//---------- Moment ----------
+const moment = require("moment");
+//---------- Moment ----------
+
 //------------------------------------------ function ------------------------------------------
 
 const BME_Schema = (collection) => {
@@ -30,7 +34,7 @@ const BME_Schema = (collection) => {
         humi: { type: Number, require: true },
         alti: { type: Number, require: false },
         press: { type: Number, require: false },
-        createdAt: { type: Date, default: Date.now },
+        date: { type: String, default: moment().format("YYYY/MM/DD HH:mm:ss")}
     });
     var BME = mongoose.model(collection, model);
     return BME;
@@ -50,7 +54,7 @@ const createBME = (BME, envData) => {
 
 const showBME = (BME) => {
     BME.find({})
-        .sort("createdAt")
+        .sort({"date" : 1})
 	.limit(3)
         .exec((err, datas) => {
             for (data of datas) {
@@ -64,7 +68,7 @@ const PMS_Schema = (collection) => {
         pm1: { type: Number, require: false },
         pm25: { type: Number, require: true },
         pm10: { type: Number, require: true },
-        createdAt: { type: Date, default: Date.now },
+        date: { type: String, default: moment().format("YYYY/MM/DD HH:mm:ss")}     // delete the dot and everything after },
     });
     var PMS = mongoose.model(collection, model);
     return PMS;
@@ -84,7 +88,7 @@ const createPMS = (PMS, pm) => {
 
 const showPMS = (PMS) => {
     PMS.find({})
-        .sort("createdAt")
+        .sort({"date" : 1})
 	.limit(3)
         .exec((err, datas) => {
             for (data of datas) {
@@ -128,7 +132,7 @@ client.on("message", async (topic, message, packet) => {
             .catch((result) => {
                 console.log(result);
             });
-        showPMS(BME);
+        showBME(BME);
     }
 });
 
